@@ -34,76 +34,69 @@ class PCB_t {
 		usedCPU
 	}
 }
-class Node {
-	var data: PCB_t;
-	var next: Node;
-
-	method Init()
-    modifies this;
-    ensures next == null;
-	ensures this != null; 
-	{
-		 next := null;
-	}
-}
 
 class Queue  {
-	var head : Node;
-	var tail : Node;
+
+	var que : seq<PCB_t>;
+
 	predicate Valid()
 	reads this;
-	reads tail;
+	reads que;
 	{
-		(head == null <==> tail ==null) || (head!=null <==> tail!=null  )
+		null !in que &&(forall i,j :: 0 <= i < j < |que| ==> que[i].getPid() != que[j].getPid())
 	}
-	/*predicate inDB(a: PCB_t)
+	predicate inQue(pid: int)
 	requires Valid();
-	requires a!=null;
-	reads a;
 	reads this;
+	reads que;
 	{
-		
-	}*/
+		exists k: PCB_t :: k in que && k.getPid() == pid
+	}
 	constructor Init ()
 	modifies this;
 	ensures Valid();
+	ensures que == [];
 	{
-		tail,head:=null,null;
+		que := [];
 	}
 
 	method enQueue (a:PCB_t) 
 	requires Valid();
 	requires a!=null;
+	requires !inQue(a.getPid());
 	modifies this;
-	modifies tail
 	ensures Valid();
-	ensures tail.next ==null;
+	ensures |que|>0;
 	{
-		if(head==null)
-		{
-			head := new Node.Init();
-			head.data:=a;
-			tail:=head;
-		}
-		else{
-		tail.next:= new Node.Init();
-		tail.next.data:=a;
-		tail:=tail.next;
-		}
+		que:=que+[a];	
 	}
 
 	method deQueue ()  returns (a:PCB_t)
 	requires Valid();
+	requires |que|>0;
 	modifies this;
 	ensures Valid();
-	{    
+	ensures a != null;
+	{ 
+		a:= que[0]; 
+		que := que[0..];  
 	}
 	
 }
 
-method main () {
-	var pcb1 := new PCB_t.Init(1,10,0);
+
+
+
+method main () 
+
+{
+
+    var pcb1 := new PCB_t.Init(1,10,0);
+	var que1 := new Queue.Init();
 	assert pcb1.pid == 1;
 	assert pcb1.duration == 10;
 	assert pcb1.ownerID == 0;
+	que1.enQueue(pcb1);
+	var pcb2 :=que1.deQueue(); 
+	
 }
