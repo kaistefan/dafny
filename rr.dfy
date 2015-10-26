@@ -10,8 +10,10 @@ class PCB_t {
 	ensures getPid() == a;
 	ensures getDuration() == b;
 	ensures getOwnerID() == c;
+	ensures usedCPU == 0;
 	{
 		pid, duration,ownerID := a,b,c;
+		usedCPU:=0;
 	}
 	function method getOwnerID () : int
 	reads this;
@@ -84,13 +86,60 @@ class Queue  {
 	
 }
 
+class OS {
+	var q1 : Queue;
+	var pcb : PCB_t;
+	var quantum : int;
+
+	constructor Init(a: int)
+	modifies this;
+	ensures quantum == a;
+	ensures q1 != null;
+	{
+		quantum := a;
+		q1 := new Queue.Init();
+	}
+
+	method addPCB(a: PCB_t)
+	requires q1 != null;
+	requires a != null;
+	requires q1.Valid();
+	requires !q1.inQue(a.getPid());
+	modifies q1;
+	ensures q1.Valid();
+	{
+		q1.enQueue(a);
+	}
+
+	method getPCB() returns (a: PCB_t)
+	requires q1 != null;
+	requires q1.Valid();
+	modifies this;
+	modifies q1;
+	ensures a == pcb;
+	ensures q1.Valid();
+	
+	{
+		pcb := q1.deQueue();
+		a := pcb;
+	}
+
+	method operate()
+	requires pcb != null;
+	modifies pcb;
+	{
+		pcb.usedCPU := pcb.usedCPU + quantum;
+
+	}
+}
+
+
 
 
 
 method main () 
 
 {
-
     var pcb1 := new PCB_t.Init(1,10,0);
 	var que1 := new Queue.Init();
 	assert pcb1.pid == 1;
