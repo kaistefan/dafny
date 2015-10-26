@@ -67,6 +67,9 @@ class Queue  {
 	modifies this;
 	ensures Valid();
 	ensures |que|>0;
+	ensures a == que[|que|-1];
+	ensures |que| == old(|que|+1);
+	ensures  que[..|que|-1]== old (que);
 	{
 		que:=que+[a];	
 	}
@@ -76,27 +79,27 @@ class Queue  {
 	requires |que|>0;
 	modifies this;
 	ensures Valid();
-	ensures a != null;
+	ensures a == old(que[0]);
+	ensures |que| == old(|que|)-1;
+	ensures  que== old (que[1..]);
 	{ 
 		a:= que[0]; 
-		que := que[0..];  
+		que := que[1..];  
 	}
 	
 }
 
-
-
-
 method main () 
-
 {
-
     var pcb1 := new PCB_t.Init(1,10,0);
+	var pcb3 := new PCB_t.Init(2,10,0);
 	var que1 := new Queue.Init();
 	assert pcb1.pid == 1;
 	assert pcb1.duration == 10;
 	assert pcb1.ownerID == 0;
-	que1.enQueue(pcb1);
+	que1.enQueue(pcb1);que1.enQueue(pcb3);
+	assert que1.que[0]== pcb1;
 	var pcb2 :=que1.deQueue(); 
+	assert pcb1.getPid()==pcb2.getPid();
 	
 }
