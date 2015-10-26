@@ -91,7 +91,6 @@ class Queue  {
 	
 }
 
-<<<<<<< HEAD
 class OS {
 	var q1 : Queue;
 	var pcb : PCB_t;
@@ -119,10 +118,13 @@ class OS {
 
 	method getPCB() returns (a: PCB_t)
 	requires q1 != null;
+	requires pcb == null;
 	requires q1.Valid();
+	requires |q1.que| > 0;
 	modifies this;
 	modifies q1;
 	ensures a == pcb;
+	ensures q1 != null;
 	ensures q1.Valid();
 	
 	{
@@ -131,20 +133,27 @@ class OS {
 	}
 
 	method operate()
+	requires q1 != null;
 	requires pcb != null;
+	requires q1.Valid();
+	requires |q1.que| > 0;
+	requires !q1.inQue(pcb.getPid());
+	modifies this;
+	modifies q1;
 	modifies pcb;
+	ensures pcb == null;
+	ensures old (pcb.usedCPU + quantum < pcb.duration) ==> q1 != null && q1.Valid() && q1.inQue(old(pcb.getPid()));
+
 	{
 		pcb.usedCPU := pcb.usedCPU + quantum;
-
+		if(pcb.usedCPU < pcb.duration) {
+			q1.enQueue(pcb);
+			assert q1.inQue(pcb.getPid());
+		}
+		pcb := null;
 	}
 }
 
-
-
-
-
-=======
->>>>>>> 0d98c58a51cb26628416d3af818f7ab5586aabc9
 method main () 
 {
     var pcb1 := new PCB_t.Init(1,10,0);
