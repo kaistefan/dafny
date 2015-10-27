@@ -5,14 +5,14 @@ class PCB_t {
 	var duration : int;
 	var ownerID :int;
 	var usedCPU : int;
-	constructor Init (a: int, b: int,c:int)
+	constructor Init (a: int, b: int, c: int)
 	modifies this;
 	ensures getPid() == a;
 	ensures getDuration() == b;
 	ensures getOwnerID() == c;
 	ensures usedCPU == 0;
 	{
-		pid, duration,ownerID := a,b,c;
+		pid, duration, ownerID := a, b, c;
 		usedCPU:=0;
 	}
 	function method getOwnerID () : int
@@ -45,12 +45,13 @@ class Queue  {
 	reads this;
 	reads que;
 	{
-		null !in que &&(forall i,j :: 0 <= i < j < |que| ==> que[i].getPid() != que[j].getPid())
+		null !in que && (forall i,j :: 0 <= i < j < |que| ==> que[i].getPid() != que[j].getPid())
 	}
 	predicate inQue(pid: int)
 	requires Valid();
 	reads this;
 	reads que;
+	ensures Valid();
 	{
 		exists k: PCB_t :: k in que && k.getPid() == pid
 	}
@@ -100,7 +101,10 @@ class OS {
 	modifies this;
 	ensures quantum == a;
 	ensures q1 != null;
+	ensures pcb == null;
+	ensures q1.Valid();
 	{
+		pcb := null;
 		quantum := a;
 		q1 := new Queue.Init();
 	}
@@ -156,15 +160,35 @@ class OS {
 
 method main () 
 {
-    var pcb1 := new PCB_t.Init(1,10,0);
-	var pcb3 := new PCB_t.Init(2,10,0);
-	var que1 := new Queue.Init();
+    var pcb1 := new PCB_t.Init(1,80,5);
+	var pcb2 := new PCB_t.Init(2,20,0);
+	/*var pcb3 := new PCB_t.Init(3,90,0);
+	var pcb4 := new PCB_t.Init(4,50,0);
+	var pcb5 := new PCB_t.Init(5,10,0);
+	var pcb6 := new PCB_t.Init(6,75,0);*/
+	assert pcb1 != null;
 	assert pcb1.pid == 1;
-	assert pcb1.duration == 10;
-	assert pcb1.ownerID == 0;
-	que1.enQueue(pcb1);que1.enQueue(pcb3);
-	assert que1.que[0]== pcb1;
-	var pcb2 :=que1.deQueue(); 
-	assert pcb1.getPid()==pcb2.getPid();
+	assert pcb1.duration == 80;
+	assert pcb1.ownerID == 5;
+	assert pcb1 != pcb2;
+	var os := new OS.Init(10);
+	assert os != null;
+	assert os.quantum == 10;
+	assert os.pcb == null;
+	assert os.q1 != null;
+	assert null !in os.q1.que;
+	os.addPCB(pcb1);
+	/*var que1 := new Queue.Init();
+	assert pcb1.pid == 1;
+	assert pcb1.duration == 80;
+	assert pcb1.ownerID == 5;
+	que1.enQueue(pcb1);
+	que1.enQueue(pcb3);
+	assert que1.que[0] == pcb1;
+	assert que1.que[1] == pcb3;
+	assert |que1.que| == 2;
+	var pcb2 := que1.deQueue();
+	assert |que1.que| == 1;
+	assert pcb1.getPid() == pcb2.getPid();*/
 	
 }
