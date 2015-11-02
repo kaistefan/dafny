@@ -118,17 +118,26 @@ class OS {
 		pcb.usedCPU := pcb.usedCPU + quantum;
 		assert pcb == old(que[0]);
 		assert pcb.usedCPU == old (que[0].usedCPU + quantum);
+		
+		print("pid: ");print(pcb.pid);print(" | duration: ");print(pcb.duration);print(" | usedCPU: ");print(pcb.usedCPU);
+
 		if(pcb.usedCPU < pcb.duration) {
 			enQueue(pcb);
 			assert qsize == |que|;
 			assert  old (que[0].usedCPU + quantum < que[0].duration) ==> |que| == old(|que|);
+			print(" | wird eingereit \n");
+		} else {
+			print(" | wird nicht eingereit \n");
 		}
 		assert  old (que[0].usedCPU + quantum < que[0].duration) ==> |que| == old(|que|);
+
+
+
 		pcb := null;
 	}
 }
 
-method main () 
+method Main () 
 {
     var pcb1 := new PCB_t.Init(1,80,5);
 	var pcb2 := new PCB_t.Init(2,20,0);
@@ -163,7 +172,6 @@ method main ()
 	invariant fresh (os.que);
 	{
 	os.operate();
-	print("test");
 	i:=i+1;
 	}
 }

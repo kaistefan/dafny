@@ -1,0 +1,33 @@
+pid: 1 | duration: 80 | usedCPU: 10 | wird eingereit 
+pid: 2 | duration: 20 | usedCPU: 10 | wird eingereit 
+pid: 3 | duration: 90 | usedCPU: 10 | wird eingereit 
+pid: 4 | duration: 50 | usedCPU: 10 | wird eingereit 
+pid: 5 | duration: 10 | usedCPU: 10 | wird nicht eingereit 
+pid: 6 | duration: 75 | usedCPU: 10 | wird eingereit 
+pid: 1 | duration: 80 | usedCPU: 20 | wird eingereit 
+pid: 2 | duration: 20 | usedCPU: 20 | wird nicht eingereit 
+pid: 3 | duration: 90 | usedCPU: 20 | wird eingereit 
+pid: 4 | duration: 50 | usedCPU: 20 | wird eingereit 
+pid: 6 | duration: 75 | usedCPU: 20 | wird eingereit 
+pid: 1 | duration: 80 | usedCPU: 30 | wird eingereit 
+pid: 3 | duration: 90 | usedCPU: 30 | wird eingereit 
+pid: 4 | duration: 50 | usedCPU: 30 | wird eingereit 
+pid: 6 | duration: 75 | usedCPU: 30 | wird eingereit 
+pid: 1 | duration: 80 | usedCPU: 40 | wird eingereit 
+pid: 3 | duration: 90 | usedCPU: 40 | wird eingereit 
+pid: 4 | duration: 50 | usedCPU: 40 | wird eingereit 
+pid: 6 | duration: 75 | usedCPU: 40 | wird eingereit 
+pid: 1 | duration: 80 | usedCPU: 50 | wird eingereit 
+pid: 3 | duration: 90 | usedCPU: 50 | wird eingereit 
+pid: 4 | duration: 50 | usedCPU: 50 | wird nicht eingereit 
+pid: 6 | duration: 75 | usedCPU: 50 | wird eingereit 
+pid: 1 | duration: 80 | usedCPU: 60 | wird eingereit 
+pid: 3 | duration: 90 | usedCPU: 60 | wird eingereit 
+pid: 6 | duration: 75 | usedCPU: 60 | wird eingereit 
+pid: 1 | duration: 80 | usedCPU: 70 | wird eingereit 
+pid: 3 | duration: 90 | usedCPU: 70 | wird eingereit 
+pid: 6 | duration: 75 | usedCPU: 70 | wird eingereit 
+pid: 1 | duration: 80 | usedCPU: 80 | wird nicht eingereit 
+pid: 3 | duration: 90 | usedCPU: 80 | wird eingereit 
+pid: 6 | duration: 75 | usedCPU: 80 | wird nicht eingereit 
+pid: 3 | duration: 90 | usedCPU: 90 | wird nicht eingereit 
