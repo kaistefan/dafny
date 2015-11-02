@@ -126,6 +126,7 @@ class OS {
 	modifies pcb;
 	ensures pcb == null;
 	ensures old (pcb.usedCPU + quantum < pcb.duration) ==> |que| > 0 && Valid() && inQue(old(pcb.getPid()));
+	ensures |que| >= 0;
 	ensures Valid();
 	{
 		pcb.usedCPU := pcb.usedCPU + quantum;
@@ -166,7 +167,10 @@ method main ()
 	assert |os.que| == 1;
 	assert pcb1.getPid() == pcb3.getPid();
 	assert os.que[0] == pcb2;
+	assert os.pcb != null;
+	assert os.pcb == pcb3;
 	os.operate();
+	assert os != null;
 	assert os.que[0] == pcb2;
 	//assert os.que[0] == pcb2;
 	/*var que1 := new Queue.Init();
