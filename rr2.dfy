@@ -95,28 +95,12 @@ class OS {
 		a := que[0]; 
 		que := que[1..];  
 	}
-	/*
-	method getPCB() returns (a: PCB_t)
-	requires que != null;
-	requires pcb == null;
-	requires Valid();
-	requires |que| > 0;
-	modifies this;
-	modifies que;
-	ensures a == pcb;
-	ensures que != null;
-	ensures Valid();
 	
-	{
-		pcb := deQueue();
-		a := pcb;
-	}
-	*/
+
 	method operate()
 	requires Valid();
 	requires |que| > 0;
-	modifies this;
-	modifies que;
+	modifies this`que;
 	ensures |que| >= 0;
 	ensures Valid();
 	ensures old (que[0].usedCPU + quantum < que[0].duration) ==> |que| == old(|que|) && Valid() && inQue(old(que[0].getPid()))&& que[..|que|-1]==old(que[1..]);
@@ -166,12 +150,14 @@ method main ()
 	os.enQueue(pcb4);
 	os.enQueue(pcb5);
 	os.enQueue(pcb6);
-
-
-
-	while (|os.que|>0)
+	var i :=0;
+	while (i<34&&|os.que|>0)
+	invariant    0 <= i <= 34;
+	invariant os.Valid();
+	invariant fresh (os);
 	{
+	os.operate();
 
-
+	i:=i+1;
 	}
 }
