@@ -101,14 +101,19 @@ class OS {
 	requires Valid();
 	requires |que| > 0;
 	modifies this`que;
+	modifies que[0];
 	ensures |que| >= 0;
 	ensures Valid();
 	ensures old (que[0].usedCPU + quantum < que[0].duration) ==> |que| == old(|que|) && Valid() && inQue(old(que[0].getPid()))&& que[..|que|-1]==old(que[1..]);
 	ensures old (que[0].usedCPU + quantum >= que[0].duration) ==> |que|+1 == old(|que|) && Valid() && !inQue(old(que[0].getPid()))&& que==old(que[1..]);
+	ensures old (que[0].usedCPU + quantum < que[0].duration) ==> |que| == old(|que|) && Valid() && inQue(old(que[0].getPid()))&& exists pcb: PCB_t:: (pcb != null && pcb==old(que[0]) && que==old(que[1..]+[pcb]));
+	ensures old (que[0].usedCPU + quantum >= que[0].duration) ==> |que|+1 == old(|que|) && Valid() && !inQue(old(que[0].getPid()))&& que==old(que[1..]);
 	
 	{
 		ghost var qsize := |que|;
+		ghost var head := que[0];
 		var pcb := deQueue();
+		assert pcb == head;
 		assert qsize == |que| + 1;
 		pcb.usedCPU := pcb.usedCPU + quantum;
 		assert pcb == old(que[0]);
@@ -155,9 +160,10 @@ method main ()
 	invariant    0 <= i <= 34;
 	invariant os.Valid();
 	invariant fresh (os);
+	invariant fresh (os.que);
 	{
 	os.operate();
-
+	print("test");
 	i:=i+1;
 	}
 }
