@@ -157,7 +157,7 @@ method main ()
 	invariant fresh (os);
 	{
 	os.operate();
-
+	print("test");
 	i:=i+1;
 	}
 }
