@@ -102,10 +102,7 @@ class OS {
 	requires |que| > 0;
 	modifies this`que;
 	modifies que[0];
-	ensures |que| >= 0;
 	ensures Valid();
-	ensures old (que[0].usedCPU + quantum < que[0].duration) ==> |que| == old(|que|) && Valid() && inQue(old(que[0].getPid()))&& que[..|que|-1]==old(que[1..]);
-	ensures old (que[0].usedCPU + quantum >= que[0].duration) ==> |que|+1 == old(|que|) && Valid() && !inQue(old(que[0].getPid()))&& que==old(que[1..]);
 	ensures old (que[0].usedCPU + quantum < que[0].duration) ==> |que| == old(|que|) && Valid() && inQue(old(que[0].getPid()))&& exists pcb: PCB_t:: (pcb != null && pcb==old(que[0]) && que==old(que[1..]+[pcb]));
 	ensures old (que[0].usedCPU + quantum >= que[0].duration) ==> |que|+1 == old(|que|) && Valid() && !inQue(old(que[0].getPid()))&& que==old(que[1..]);
 	
